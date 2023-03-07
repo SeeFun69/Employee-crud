@@ -19,4 +19,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
     @Modifying
     @Query("DELETE FROM Employee WHERE name = :name")
     Integer deleteByName(String name);
+//    List<Employee> findByDepartmentName(String name);
+//    @Query("FROM Employee WHERE department.name = :name")
+//    List<Employee> getEmployeeByDepartmentName(String name);
 }

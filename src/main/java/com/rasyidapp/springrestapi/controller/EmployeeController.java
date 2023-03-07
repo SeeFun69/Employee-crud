@@ -1,6 +1,10 @@
 package com.rasyidapp.springrestapi.controller;
 
+import com.rasyidapp.springrestapi.dto.EmployeeRequest;
+import com.rasyidapp.springrestapi.model.Department;
 import com.rasyidapp.springrestapi.model.Employee;
+import com.rasyidapp.springrestapi.repository.DepartmentRepo;
+import com.rasyidapp.springrestapi.repository.EmployeeRepo;
 import com.rasyidapp.springrestapi.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,12 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService service;
+
+    @Autowired
+    private EmployeeRepo employeeRepo;
+
+    @Autowired
+    private DepartmentRepo departmentRepo;
 
 //    @Value("${app.name}")
 //    private String appName;
@@ -54,8 +64,31 @@ public class EmployeeController {
     }
 
     @PostMapping( "/employees")
-    public ResponseEntity<Employee> saveEmployees(@Valid @RequestBody Employee employee){
-        return new ResponseEntity<>(service.saveEmployee(employee), HttpStatus.CREATED);
+    public ResponseEntity<Employee> saveEmployees(@Valid @RequestBody EmployeeRequest request){
+//    public ResponseEntity<String> saveEmployees(@Valid @RequestBody EmployeeRequest request){
+//         This is One To One relationship
+        Department department = new Department();
+        department.setName(request.getDepartment());
+        departmentRepo.save(department);
+
+        Employee employee = new Employee(request);
+        employee.setDepartment(department);
+        employeeRepo.save(employee);
+
+        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+
+//        Employee employee = new Employee(request);
+//        employeeRepo.save(employee);
+//
+//        for (String s : request.getDepartment()){
+//            Department d = new Department();
+//            d.setName(s);
+//            d.setEmployee(employee);
+//
+//            departmentRepo.save(d);
+//        }
+//
+//        return new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
 
     @PutMapping( "/employees/{id}")
@@ -73,4 +106,10 @@ public class EmployeeController {
     public ResponseEntity<String> deleteByName(@RequestParam String name){
         return new ResponseEntity<>(service.deleteEmployeeByName(name) + " employee telah terhapus", HttpStatus.OK);
     }
+
+//    @GetMapping( "/employees/deptByName")
+//    public ResponseEntity<List<Employee>> getEmployeeByDepatr(@RequestParam String name){
+////        return new ResponseEntity<>(employeeRepo.findByDepartmentName(name), HttpStatus.OK);
+//        return new ResponseEntity<>(employeeRepo.getEmployeeByDepartmentName(name), HttpStatus.OK);
+//    }
 }
