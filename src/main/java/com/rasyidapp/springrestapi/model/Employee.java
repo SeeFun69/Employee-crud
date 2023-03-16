@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @ToString
@@ -25,12 +26,15 @@ public class Employee {
 
     @NotBlank(message = "Nama Tidak Boleh Kosong")
     private String name;
-
-    @JoinColumn(name = "department_id")
-    @OneToOne
-    private Department department;
-
     private String location;
+
+    @OneToMany(mappedBy = "employee")
+    private List<Department> department;
+
+//    @JoinColumn(name = "department_id")
+//    @OneToOne
+//    private Department department;
+
 
 //    private Long age = 0L;
 //

@@ -1,6 +1,7 @@
 package com.rasyidapp.springrestapi.controller;
 
 import com.rasyidapp.springrestapi.dto.EmployeeRequest;
+import com.rasyidapp.springrestapi.dto.EmployeeResponse;
 import com.rasyidapp.springrestapi.model.Department;
 import com.rasyidapp.springrestapi.model.Employee;
 import com.rasyidapp.springrestapi.repository.DepartmentRepo;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,9 +40,29 @@ public class EmployeeController {
 //        return appName+ " - "+appVersion;
 //    }
 
+//    @GetMapping( "/employees")
+//    public ResponseEntity<List<Employee>> getEmployees(){
+//        return new ResponseEntity<>(service.getEmployees(), HttpStatus.OK);
+//    }
+
     @GetMapping( "/employees")
-    public ResponseEntity<List<Employee>> getEmployees(){
-        return new ResponseEntity<>(service.getEmployees(), HttpStatus.OK);
+    public ResponseEntity<List<EmployeeResponse>> getEmployees(){
+        List<Employee> employeeList = employeeRepo.findAll();
+        List<EmployeeResponse> employeeResponse = new ArrayList<>();
+        employeeList.forEach(e -> {
+            EmployeeResponse response = new EmployeeResponse();
+            response.setId(e.getId());
+            response.setEmployeeName(e.getName());
+            response.setLocation(e.getLocation());
+            List<String> dept = new ArrayList<>();
+            for (Department d : e.getDepartment()){
+                dept.add(d.getName());
+            }
+            response.setDepartment(dept);
+            employeeResponse.add(response);
+        });
+
+        return new ResponseEntity<>(employeeResponse, HttpStatus.OK);
     }
 
     @GetMapping( "/employees/{id}")
@@ -64,31 +86,31 @@ public class EmployeeController {
     }
 
     @PostMapping( "/employees")
-    public ResponseEntity<Employee> saveEmployees(@Valid @RequestBody EmployeeRequest request){
-//    public ResponseEntity<String> saveEmployees(@Valid @RequestBody EmployeeRequest request){
+    public ResponseEntity<String> saveEmployees(@Valid @RequestBody EmployeeRequest request){
+//    public ResponseEntity<Employee> saveEmployees(@Valid @RequestBody EmployeeRequest request){
 //         This is One To One relationship
-        Department department = new Department();
-        department.setName(request.getDepartment());
-        departmentRepo.save(department);
-
-        Employee employee = new Employee(request);
-        employee.setDepartment(department);
-        employeeRepo.save(employee);
-
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
-
+//        Department department = new Department();
+//        department.setName(request.getDepartment());
+//        departmentRepo.save(department);
+//
 //        Employee employee = new Employee(request);
+//        employee.setDepartment(department);
 //        employeeRepo.save(employee);
 //
-//        for (String s : request.getDepartment()){
-//            Department d = new Department();
-//            d.setName(s);
-//            d.setEmployee(employee);
-//
-//            departmentRepo.save(d);
-//        }
-//
-//        return new ResponseEntity<>("Success", HttpStatus.CREATED);
+//        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+
+        Employee employee = new Employee(request);
+        employeeRepo.save(employee);
+
+        for (String s : request.getDepartment()){
+            Department d = new Department();
+            d.setName(s);
+            d.setEmployee(employee);
+
+            departmentRepo.save(d);
+        }
+
+        return new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
 
     @PutMapping( "/employees/{id}")

@@ -16,18 +16,18 @@ public class DepartmnetController {
     @Autowired
     private DepartmentRepo departmentRepo;
 
-    @GetMapping("/departmnet")
-    private List<DepartmentResponse> getDepartments(){
-        List<Department> departments = departmentRepo.findAll();
-        List<DepartmentResponse> list = new ArrayList<>();
-        departments.forEach(department -> {
-            DepartmentResponse response = new DepartmentResponse();
-            response.setDepartmentName(department.getName());
-            response.setId(department.getId());
-            response.setEmployeeName(department.getEmployee().getName());
-            response.setLocation(department.getEmployee().getLocation());
-            list.add(response);
-        });
-        return list;
-    }
+//    @GetMapping("/departmnet")
+//    private List<DepartmentResponse> getDepartments(){
+//        List<Department> departments = departmentRepo.findAll();
+//        List<DepartmentResponse> list = new ArrayList<>();
+//        departments.forEach(department -> {
+//            DepartmentResponse response = new DepartmentResponse();
+//            response.setDepartmentName(department.getName());
+//            response.setId(department.getId());
+//            response.setEmployeeName(department.getEmployee().getName());
+//            response.setLocation(department.getEmployee().getLocation());
+//            list.add(response);
+//        });
+//        return list;
+//    }
 }

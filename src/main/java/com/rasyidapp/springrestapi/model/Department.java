@@ -23,12 +23,12 @@ public class Department {
     @NotBlank(message = "Nama Tidak Boleh Kosong")
     private String name;
 
-//    @JoinColumn(name = "employee_id")
-//    @ManyToOne
-//    private Employee employee;
-
-    @OneToOne(mappedBy = "department")
+    @JoinColumn(name = "employee_id")
+    @ManyToOne
     private Employee employee;
+
+//    @OneToOne(mappedBy = "department")
+//    private Employee employee;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

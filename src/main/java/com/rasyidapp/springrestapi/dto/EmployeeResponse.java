@@ -11,9 +11,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeRequest {
-    private String name;
+public class EmployeeResponse {
+    private Long id;
+    private String employeeName;
     private List<String> department;
-//    private String department;
     private String location;
 }
